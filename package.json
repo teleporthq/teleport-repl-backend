@@ -1,0 +1,24 @@
+{
+  "name": "google-cloud-test",
+  "version": "0.0.0",
+  "main": "lib/index.js",
+  "types": "lib/types.d.ts",
+  "author": "JK",
+  "license": "MIT",
+  "scripts": {
+    "start": "TS_NODE_FILES=true ts-node --project tsconfig.json ./src/index.ts"
+  },
+  "dependencies": {
+    "@google-cloud/storage": "^2.5.0",
+    "@types/jest": "^24.0.15",
+    "body-parser": "^1.19.0",
+    "crypto": "^1.0.1",
+    "debug": "^4.1.1",
+    "express": "^4.17.1",
+    "jest": "^24.8.0",
+    "morgan": "^1.9.1",
+    "ts-node": "^8.3.0",
+    "tslint": "^5.18.0",
+    "typescript": "^3.5.2"
+  }
+}
