@@ -1,21 +1,12 @@
 import GoogleCloud from './cloud';
 import express from 'express'
 import bodyParser from 'body-parser'
-import morgan from 'morgan';
-import rfs from 'rotating-file-stream';
-import path from 'path';
 import { getFileName } from './helper'
 
 const port = 8080
 const app = express()
 const router = express.Router()
 
-const accessLogStream = rfs('access.log', {
-  interval: '1d',
-  path: path.join(__dirname,'..','log')
-})
-
-app.use(morgan("combined", { stream: accessLogStream }))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
@@ -41,3 +32,6 @@ app.listen(port, () => {
   console.log('Server running succesfully')
 })
 
+module.exports = {
+  app
+}
