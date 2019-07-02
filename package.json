@@ -1,14 +1,15 @@
 {
   "name": "google-cloud-test",
   "version": "0.0.0",
-  "main": "lib/index.js",
-  "types": "lib/types.d.ts",
+  "main": "lib/src/index.js",
+  "types": "lib/src/types.d.ts",
   "author": "JK",
   "license": "MIT",
   "scripts": {
     "start": "TS_NODE_FILES=true ts-node --project tsconfig.json ./src/index.ts",
     "start:dev": "TS_NODE_FILES=true ts-node-dev --project tsconfig.json ./src/index.ts",
-    "build": "tsc"
+    "build": "rimraf lib && tsc",
+    "deploy": "yarn build && gcloud functions deploy repl-jsons --runtime nodejs8 --trigger-http --entry-point app"
   },
   "dependencies": {
     "@google-cloud/storage": "^2.5.0",
@@ -17,14 +18,12 @@
     "crypto": "^1.0.1",
     "express": "^4.17.1",
     "jest": "^24.8.0",
-    "morgan": "^1.9.1",
-    "path": "^0.12.7",
-    "rotating-file-stream": "^1.4.2",
     "ts-node": "^8.3.0",
     "tslint": "^5.18.0",
     "typescript": "^3.5.2"
   },
   "devDependencies": {
-    "ts-node-dev": "^1.0.0-pre.40"
+    "ts-node-dev": "^1.0.0-pre.40",
+    "rimraf": "^2.6.3"
   }
 }
