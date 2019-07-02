@@ -2,7 +2,7 @@ import GoogleCloud from './cloud';
 import express from 'express'
 import bodyParser from 'body-parser'
 import morgan from 'morgan';
-import fs from 'fs';
+import rfs from 'rotating-file-stream';
 import path from 'path';
 import { getFileName } from './helper'
 
@@ -10,7 +10,10 @@ const port = 8080
 const app = express()
 const router = express.Router()
 
-const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+const accessLogStream = rfs('access.log', {
+  interval: '1d',
+  path: path.join(__dirname,'..','log')
+})
 
 app.use(morgan("combined", { stream: accessLogStream }))
 app.use(bodyParser.json())
