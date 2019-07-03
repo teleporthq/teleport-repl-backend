@@ -1,10 +1,12 @@
 {
-  "name": "repl-backend",
+  "name": "@teleporthq/teleport-repl-backend",
   "version": "0.0.0",
   "main": "lib/src/index.js",
   "types": "lib/src/types.d.ts",
-  "author": "JK",
+  "author": "teleportHQ",
   "license": "MIT",
+  "repository": "https://github.com/teleporthq/teleport-repl-backend",
+  "description": "A cloud function for saving UIDL's that are generated from teleport-repl",
   "scripts": {
     "lint": "tslint -p ./",
     "start": "TS_NODE_FILES=true ts-node --project tsconfig.json ./src/index.ts",
