@@ -1,7 +1,8 @@
-import GoogleCloud from './cloud';
 import express from 'express'
 import bodyParser from 'body-parser'
+import GoogleCloud from './cloud';
 import { getFileName } from './helper'
+import { UIDLUploadResponse } from './types'
 
 const port = 8080
 const app = express()
@@ -17,10 +18,10 @@ router.post('/upload-json', async (req, res) => {
   if (uidl) {
     const fileName = getFileName()
     try {
-      const response = await googleCloud.uploadUIDL(uidl, fileName)
+      const response: UIDLUploadResponse = await googleCloud.uploadUIDL(uidl, fileName)
       return res.status(200).json({ message: 'UIDL Saved Successfully', ...response })
     } catch (e) {
-      return res.status(500).json({ message: 'Failed in Saving UIDL' })
+      return res.status(500).json({ message: 'Failed in Saving UIDL', error: e })
     }
   } else {
     return res.status(400).json({ message: 'UIDL missing from the request' })

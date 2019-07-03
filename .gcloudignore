@@ -15,3 +15,4 @@
 src
 node_modules
 #!include:.gitignore
+yarn-error.log

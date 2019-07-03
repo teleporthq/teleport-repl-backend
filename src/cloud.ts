@@ -1,6 +1,7 @@
 import { Storage } from '@google-cloud/storage'
-import config from '../config.json';
+import config from '../config.json'
 import { APPLICATION_TYPE, CACHE_CONTROL } from './constants'
+import { UIDLUploadResponse } from './types'
 
 class GoogleCloud {
   private bucket: any;
@@ -20,7 +21,7 @@ class GoogleCloud {
       }
     })
     
-    return new Promise((resolve, reject) => {
+    return new Promise<UIDLUploadResponse>((resolve, reject) => {
       blobStream.end(uidl)
 
       blobStream
@@ -33,6 +34,7 @@ class GoogleCloud {
           return resolve(result)
         })
         .on('error', (error) => {
+          console.error(error)
           return reject(error)
         })
     })
