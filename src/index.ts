@@ -18,7 +18,7 @@ app.use((req, res, next) => {
 
 const googleCloud = new GoogleCloud();
 
-router.post('/upload-json', async (req, res) => {
+router.post('/upload_json', async (req, res) => {
   const { uidl } = req.body
   if (uidl) {
     const fileName = getFileName()
@@ -26,10 +26,26 @@ router.post('/upload-json', async (req, res) => {
       const response: UIDLUploadResponse = await googleCloud.uploadUIDL(uidl, fileName)
       return res.status(200).json({ message: 'UIDL Saved Successfully', ...response })
     } catch (e) {
+      console.error(e)
       return res.status(500).json({ message: 'Failed in Saving UIDL', error: e })
     }
   } else {
     return res.status(400).json({ message: 'UIDL missing from the request' })
+  }
+})
+
+router.get('/fetch_uidl', async (req, res) => {
+  const { fileName } = req.query
+  if (fileName) {
+    try {
+      const uidl = await googleCloud.fetchUIDL(fileName)
+      return res.status(200).json({ uidl })
+    } catch(e) {
+      console.error(e)
+      return res.status(500).json({ message: 'Fialed in fetching UIDL', error: e })
+    }
+  } else {
+    return res.status(400).json({ message: 'Filename is missing from the request' })
   }
 })
 
