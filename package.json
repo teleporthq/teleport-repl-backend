@@ -1,34 +1,28 @@
 {
   "name": "@teleporthq/teleport-repl-backend",
   "version": "0.0.0",
-  "main": "lib/src/index.js",
-  "types": "lib/src/types.d.ts",
+  "main": "dist/index.js",
   "author": "teleportHQ",
   "license": "MIT",
   "repository": "https://github.com/teleporthq/teleport-repl-backend",
   "description": "A cloud function for saving UIDL's that are generated from teleport-repl",
   "scripts": {
     "lint": "tslint -p ./",
-    "start": "TS_NODE_FILES=true ts-node --project tsconfig.json ./src/index.ts",
-    "start:dev": "TS_NODE_FILES=true ts-node-dev --project tsconfig.json ./src/index.ts",
-    "build": "rimraf lib && tsc",
-    "deploy": "yarn build && gcloud functions deploy repl-jsons --runtime nodejs8 --trigger-http --entry-point app"
+    "dev": "ts-node-dev ./src/index.ts",
+    "build": "rimraf dist && tsc",
+    "deploy": "yarn build && gcloud functions deploy repl-api --runtime nodejs10 --trigger-http --entry-point app --set-env-vars NODE_ENV=production"
   },
   "dependencies": {
-    "@google-cloud/storage": "^2.5.0",
+    "@google-cloud/storage": "^3.0.2",
     "body-parser": "^1.19.0",
-    "crypto": "^1.0.1",
-    "express": "^4.17.1",
-    "jest": "^24.8.0"
+    "express": "^4.17.1"
   },
   "devDependencies": {
     "rimraf": "^2.6.3",
     "ts-node-dev": "^1.0.0-pre.40",
     "tslint-config-prettier": "^1.18.0",
-    "ts-node": "^8.3.0",
     "tslint": "^5.18.0",
     "@types/express": "^4.17.0",
-    "@types/jest": "^24.0.15",
     "typescript": "^3.5.2"
   }
 }

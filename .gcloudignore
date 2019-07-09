@@ -7,4 +7,5 @@ tslint.json
 tsconfig.json
 yarn.lock
 README.md
+LICENSE
 src/*ts
