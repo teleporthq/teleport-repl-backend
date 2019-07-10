@@ -56,7 +56,7 @@ app.get("/fetch-uidl/:fileName", async (req, res) => {
   }
 });
 
-app.get("/", async (req, res) => res.send("REPL API server"));
+app.get("/", (req, res) => res.send("REPL API server"));
 
 if (process.env.NODE_ENV !== "production") {
   app.listen(port, () => {
