@@ -9,8 +9,7 @@
   "scripts": {
     "lint": "tslint -p ./",
     "dev": "ts-node-dev ./src/index.ts",
-    "build": "rimraf dist && tsc",
-    "deploy": "yarn build && gcloud functions deploy repl-api --runtime nodejs10 --trigger-http --entry-point app --set-env-vars NODE_ENV=production"
+    "build": "rimraf dist && tsc"
   },
   "dependencies": {
     "@google-cloud/storage": "^3.0.2",

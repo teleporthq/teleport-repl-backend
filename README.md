@@ -4,18 +4,11 @@ Helps in sharing  [UIDL](https://docs.teleporthq.io/#uidl) that is generated fro
 
 ## Running
 
-Starting the server
+Starting the server in watch mode
 
 ```
 yarn start
 ```
-
-Starting the server in watch mode
-
-```
-yarn start:dev
-```
-The server starts running and listens to port **8080**
 
 ## Build
 
@@ -27,8 +20,4 @@ yarn build
 
 ## Deployment
 
-For deploying in **gcloud**, run
-
-```
-yarn deploy
-```
+**master** branch is automatically deployed to google cloud function
