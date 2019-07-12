@@ -18,7 +18,7 @@ class GoogleCloud {
         return;
       }
       const content = await file.download();
-      return content.toString();
+      return JSON.parse(content);
     } catch (e) {
       console.error(e);
       throw Error("Something went wrong");
