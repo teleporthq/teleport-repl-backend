@@ -18,7 +18,7 @@ class GoogleCloud {
         return;
       }
       const content = await file.download();
-      return content.toString();
+      return JSON.parse(content);
     } catch (e) {
       console.error(e);
       throw Error("Something went wrong");
@@ -29,7 +29,7 @@ class GoogleCloud {
     try {
       const file = this.bucket.file(fileName);
 
-      const bufferStream = Buffer.from(uidl);
+      const bufferStream = Buffer.from(JSON.stringify(uidl));
       await file.save(bufferStream, {
         metadata: {
           contentType: APPLICATION_TYPE,
