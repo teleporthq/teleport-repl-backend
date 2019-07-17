@@ -7,6 +7,7 @@ const port = process.env.PORT || 8080;
 const app = express();
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true, limit: "2mb" }));
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
@@ -20,8 +21,21 @@ const googleCloud = new GoogleCloud();
 
 app.post("/upload-uidl", async (req, res) => {
   const { uidl } = req.body;
+
   if (!uidl) {
     return res.status(400).json({ message: "UIDL missing from the request" });
+  }
+
+  try {
+    JSON.parse(uidl);
+    if (typeof uidl !== "string") {
+      throw new Error("Requested UIDL is not a string");
+    }
+  } catch (e) {
+    console.error(e);
+    return res
+      .status(400)
+      .json({ message: "Please send a properly structured UIDL" });
   }
 
   const fileName = getFileName();

@@ -25,11 +25,11 @@ class GoogleCloud {
     }
   }
 
-  public async uploadUIDL(uidl: any, fileName: string) {
+  public async uploadUIDL(uidl: string, fileName: string) {
     try {
       const file = this.bucket.file(fileName);
 
-      const bufferStream = Buffer.from(JSON.stringify(uidl));
+      const bufferStream = Buffer.from(uidl);
       await file.save(bufferStream, {
         metadata: {
           contentType: APPLICATION_TYPE,
