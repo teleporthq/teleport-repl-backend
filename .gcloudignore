@@ -1,0 +1,11 @@
+.gcloudignore
+.git
+.gitignore
+node_modules
+yarn-error.log
+tslint.json
+tsconfig.json
+yarn.lock
+README.md
+LICENSE
+src/*ts
