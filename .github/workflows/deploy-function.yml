@@ -18,6 +18,6 @@ jobs:
           version: '285.0.0'
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account_email: ${{ secrets.GCP_SA_EMAIL }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          service_account_key: ${{ secrets.GCLOUD_AUTH }}
           export_default_credentials: true
       - run: gcloud functions deploy repl-api --trigger-http --runtime nodejs10 --entry-point app --set-env-vars NODE_ENV=production
