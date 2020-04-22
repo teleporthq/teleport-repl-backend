@@ -13,11 +13,11 @@ jobs:
       - uses: actions/setup-node@v1.4.2
       - run: yarn
       - run: yarn run build
-      - name: Auth to GCP
-        uses: docker://github/gcloud-auth:master
-        env:
-          GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
-      - name: Deploy to cloud function
-        uses: actions/gcloud/cli@master
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
-          args: functions deploy repl-api --trigger-http --runtime nodejs10 --entry-point app --set-env-vars NODE_ENV=production --project croapp-dev
+          version: '285.0.0'
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_email: ${{ secrets.GCP_SA_EMAIL }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+      - run: gcloud functions deploy repl-api --trigger-http --runtime nodejs10 --entry-point app --set-env-vars NODE_ENV=production
