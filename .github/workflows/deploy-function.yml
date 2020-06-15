@@ -3,7 +3,7 @@ name: Deploy GCF
 on:
   push:
     branches:
-      - master
+      - development
 
 jobs:
   build:
