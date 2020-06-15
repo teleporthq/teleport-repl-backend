@@ -20,4 +20,4 @@ yarn build
 
 ## Deployment
 
-**master** branch is automatically deployed to google cloud function
+**development** branch is automatically deployed to google cloud function
