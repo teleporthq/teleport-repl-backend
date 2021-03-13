@@ -19,8 +19,14 @@ app.use((req, res, next) => {
 
 const googleCloud = new GoogleCloud();
 
-app.post("/upload-uidl", async (req, res) => {
-  const { uidl } = req.body;
+app.post("/upload-uidl/:type", async (req, res) => {
+  const {
+    uidl,
+    type,
+  }: {
+    uidl: string;
+    type?: "component" | "project";
+  } = req.body;
 
   if (!uidl) {
     return res.status(400).json({ message: "UIDL missing from the request" });
@@ -40,7 +46,7 @@ app.post("/upload-uidl", async (req, res) => {
 
   const fileName = getFileName();
   try {
-    await googleCloud.uploadUIDL(uidl, fileName);
+    await googleCloud.uploadUIDL(uidl, fileName, type ?? "component");
     return res
       .status(200)
       .json({ message: "UIDL saved successfully", fileName });
@@ -50,8 +56,14 @@ app.post("/upload-uidl", async (req, res) => {
   }
 });
 
-app.get("/fetch-uidl/:fileName", async (req, res) => {
-  const { fileName } = req.params;
+app.get("/fetch-uidl/:fileName/:type", async (req, res) => {
+  const {
+    fileName,
+    type,
+  }: {
+    fileName: string;
+    type: "component" | "project";
+  } = req.params;
   if (!fileName) {
     return res
       .status(400)
@@ -59,7 +71,7 @@ app.get("/fetch-uidl/:fileName", async (req, res) => {
   }
 
   try {
-    const uidl = await googleCloud.fetchUIDL(fileName);
+    const uidl = await googleCloud.fetchUIDL(fileName, type ?? "component");
     if (!uidl) {
       return res.status(404).json({ message: "File not found" });
     }

@@ -10,8 +10,8 @@ class GoogleCloud {
     this.bucket = storage.bucket(config.bucketName);
   }
 
-  public async fetchUIDL(fileName: string) {
-    const file = this.bucket.file(fileName);
+  public async fetchUIDL(fileName: string, type: "component" | "project") {
+    const file = this.bucket.file(`${type}/${fileName}`);
     try {
       const exists = await file.exists();
       if (!exists[0]) {
@@ -25,16 +25,20 @@ class GoogleCloud {
     }
   }
 
-  public async uploadUIDL(uidl: string, fileName: string) {
+  public async uploadUIDL(
+    uidl: string,
+    fileName: string,
+    type: "component" | "project"
+  ) {
     try {
-      const file = this.bucket.file(fileName);
+      const file = this.bucket.file(`${type}/${fileName}`);
 
       const bufferStream = Buffer.from(uidl);
       await file.save(bufferStream, {
         metadata: {
           contentType: APPLICATION_TYPE,
-          cacheControl: CACHE_CONTROL
-        }
+          cacheControl: CACHE_CONTROL,
+        },
       });
       return file;
     } catch (e) {
