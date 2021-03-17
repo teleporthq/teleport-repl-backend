@@ -1,6 +1,7 @@
 import express from "express";
 import { v4 as uuidv4 } from "uuid";
 import GoogleCloud from "./cloud";
+import { Validator } from "@teleporthq/teleport-uidl-validator";
 
 const port = process.env.PORT || 8080;
 const app = express();
@@ -19,42 +20,42 @@ const googleCloud = new GoogleCloud();
 
 app.post("/upload-uidl", async (req, res) => {
   const {
-    uidl,
     type,
+    uidl,
   }: {
-    uidl: string;
     type: "component" | "project";
+    uidl: Record<string, unknown>;
   } = req.body;
 
-  if (!uidl) {
-    return res.status(400).json({ message: "UIDL missing from the request" });
-  }
   if (!["project", "component"].includes(type)) {
     return res
       .status(400)
       .json({ message: "Type must be project or component" });
   }
-
-  try {
-    JSON.parse(uidl);
-    if (typeof uidl !== "string") {
-      throw new Error("Requested UIDL is not a string");
-    }
-  } catch (e) {
-    console.error(e);
-    return res
-      .status(400)
-      .json({ message: "Please send a properly structured UIDL" });
+  if (!uidl) {
+    return res.status(400).json({ message: "UIDL missing from the request" });
   }
 
-  const fileName = uuidv4();
+  const validator = new Validator();
+  const validateFunction =
+    type === "project"
+      ? validator.validateProjectSchema
+      : validator.validateComponentSchema;
+
   try {
-    await googleCloud.uploadUIDL(uidl, fileName, type);
+    validateFunction(uidl);
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
+
+  try {
+    const fileName = uuidv4();
+    await googleCloud.uploadUIDL(JSON.stringify(uidl), fileName, type);
     return res
       .status(200)
       .json({ message: "UIDL saved successfully", fileName });
-  } catch (e) {
-    console.error(e);
+  } catch (error) {
+    console.error(error);
     return res.status(500).json({ message: "Failed in saving UIDL" });
   }
 });
@@ -62,15 +63,15 @@ app.post("/upload-uidl", async (req, res) => {
 app.get("/fetch-uidl/:type/:fileName", async (req, res) => {
   const { fileName, type } = req.params;
 
-  if (!fileName) {
-    return res
-      .status(400)
-      .json({ message: "Filename is missing from the request" });
-  }
   if (!["project", "component"].includes(type)) {
     return res
       .status(400)
       .json({ message: "Type must be project or component" });
+  }
+  if (!fileName) {
+    return res
+      .status(400)
+      .json({ message: "Filename is missing from the request" });
   }
 
   try {
