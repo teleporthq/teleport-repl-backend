@@ -1,6 +1,6 @@
-## REPL BACK-END
+## REPL BACKEND
 
-Helps in sharing  [UIDL](https://docs.teleporthq.io/#uidl) that is generated from [teleport-repl](https://repl.teleporthq.io/).
+Helps in sharing [UIDL](https://docs.teleporthq.io/#uidl) that is generated from [teleport-repl](https://repl.teleporthq.io/).
 
 ## Running
 
