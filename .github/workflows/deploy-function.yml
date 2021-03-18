@@ -10,14 +10,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1.4.2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "14"
       - run: yarn
       - run: yarn run build
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      - uses: google-github-actions/deploy-cloud-functions@main
         with:
-          version: '285.0.0'
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_email: ${{ secrets.GCP_SA_EMAIL }}
-          service_account_key: ${{ secrets.GCLOUD_AUTH }}
-          export_default_credentials: true
-      - run: gcloud functions deploy repl-api --trigger-http --runtime nodejs10 --entry-point app --set-env-vars NODE_ENV=production
+          credentials: ${{ secrets.GCLOUD_AUTH }}
+          name: repl-api
+          runtime: nodejs14
+          entry_point: app
+          env_vars: NODE_ENV=production
