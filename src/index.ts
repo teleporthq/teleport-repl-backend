@@ -1,13 +1,12 @@
 import express from "express";
-import bodyParser from "body-parser";
+import { v4 as uuidv4 } from "uuid";
 import GoogleCloud from "./cloud";
-import { getFileName } from "./helper";
+import { Validator } from "@teleporthq/teleport-uidl-validator";
 
 const port = process.env.PORT || 8080;
 const app = express();
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true, limit: "2mb" }));
+app.use(express.json());
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
@@ -20,38 +19,50 @@ app.use((req, res, next) => {
 const googleCloud = new GoogleCloud();
 
 app.post("/upload-uidl", async (req, res) => {
-  const { uidl } = req.body;
+  const {
+    type,
+    uidl,
+  }: {
+    type: "component" | "project";
+    uidl: Record<string, unknown>;
+  } = req.body;
 
+  if (!["project", "component"].includes(type)) {
+    return res
+      .status(400)
+      .json({ message: "Type must be project or component" });
+  }
   if (!uidl) {
     return res.status(400).json({ message: "UIDL missing from the request" });
   }
 
+  const validator = new Validator();
+  const validateFunction =
+    type === "project"
+      ? validator.validateProjectSchema
+      : validator.validateComponentSchema;
+
   try {
-    JSON.parse(uidl);
-    if (typeof uidl !== "string") {
-      throw new Error("Requested UIDL is not a string");
-    }
-  } catch (e) {
-    console.error(e);
-    return res
-      .status(400)
-      .json({ message: "Please send a properly structured UIDL" });
+    validateFunction(uidl);
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
   }
 
-  const fileName = getFileName();
   try {
-    await googleCloud.uploadUIDL(uidl, fileName);
+    const fileName = uuidv4();
+    await googleCloud.uploadUIDL(JSON.stringify(uidl), fileName);
     return res
       .status(200)
       .json({ message: "UIDL saved successfully", fileName });
-  } catch (e) {
-    console.error(e);
+  } catch (error) {
+    console.error(error);
     return res.status(500).json({ message: "Failed in saving UIDL" });
   }
 });
 
 app.get("/fetch-uidl/:fileName", async (req, res) => {
   const { fileName } = req.params;
+
   if (!fileName) {
     return res
       .status(400)

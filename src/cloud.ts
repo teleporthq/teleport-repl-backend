@@ -32,9 +32,11 @@ class GoogleCloud {
       const bufferStream = Buffer.from(uidl);
       await file.save(bufferStream, {
         metadata: {
+          gzip: true,
           contentType: APPLICATION_TYPE,
-          cacheControl: CACHE_CONTROL
-        }
+          cacheControl: CACHE_CONTROL,
+        },
+        resumable: false,
       });
       return file;
     } catch (e) {
