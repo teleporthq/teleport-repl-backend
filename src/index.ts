@@ -24,7 +24,7 @@ app.post("/upload-uidl", async (req, res) => {
     uidl,
   }: {
     type: "component" | "project";
-    uidl: Record<string, unknown>;
+    uidl: string;
   } = req.body;
 
   if (!["project", "component"].includes(type)) {
@@ -43,7 +43,7 @@ app.post("/upload-uidl", async (req, res) => {
       : validator.validateComponentSchema;
 
   try {
-    validateFunction(uidl);
+    validateFunction(JSON.parse(uidl));
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
