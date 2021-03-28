@@ -23,7 +23,7 @@ app.post("/upload-uidl", async (req, res) => {
     uidl,
   }: {
     type: "component" | "project";
-    uidl: Record<string, unknown>;
+    uidl: string;
   } = req.body;
 
   if (!["project", "component"].includes(type)) {
