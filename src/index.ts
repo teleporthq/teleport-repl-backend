@@ -1,7 +1,6 @@
 import express from "express";
 import { v4 as uuidv4 } from "uuid";
 import GoogleCloud from "./cloud";
-import { Validator } from "@teleporthq/teleport-uidl-validator";
 
 const port = process.env.PORT || 8080;
 const app = express();
@@ -34,18 +33,6 @@ app.post("/upload-uidl", async (req, res) => {
   }
   if (!uidl) {
     return res.status(400).json({ message: "UIDL missing from the request" });
-  }
-
-  const validator = new Validator();
-  const validateFunction =
-    type === "project"
-      ? validator.validateProjectSchema
-      : validator.validateComponentSchema;
-
-  try {
-    validateFunction(uidl);
-  } catch (error) {
-    return res.status(400).json({ message: error.message });
   }
 
   try {
