@@ -36,6 +36,14 @@ app.post("/upload-uidl", async (req, res) => {
   }
 
   try {
+    JSON.parse(uidl);
+  } catch {
+    return res
+      .status(400)
+      .json({ message: "Please check the input UIDL format" });
+  }
+
+  try {
     const fileName = uuidv4();
     await googleCloud.uploadUIDL(JSON.stringify(uidl), fileName);
     return res
